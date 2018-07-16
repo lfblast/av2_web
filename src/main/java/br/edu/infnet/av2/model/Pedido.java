@@ -30,8 +30,12 @@ public class Pedido {
     @OneToMany(mappedBy="pedido", fetch=FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
     private List<ProdutoPedido> produtos;
     
+    @ManyToOne
+    @JoinColumn(name="atendente_id", nullable=false)
     private Funcionario atendente;
     
+    @ManyToOne
+    @JoinColumn(name="entregador_id", nullable=false)
     private Funcionario entregador;
     
     @ManyToOne
