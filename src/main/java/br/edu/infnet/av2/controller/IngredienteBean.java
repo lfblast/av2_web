@@ -13,12 +13,18 @@ import org.springframework.stereotype.Component;
 public class IngredienteBean implements Serializable {
     
     private static final long serialVersionUID = 1L;
+    
     @Autowired
     private IngredienteRepo ingredienteRepo;
     private List<Ingrediente> ingredientes;
+    private Ingrediente ingrediente;
     
     public void listar() {
         this.ingredientes = ingredienteRepo.findAll();
+    }
+    
+    public void remover() {
+        ingredienteRepo.delete(ingrediente);
     }
 
     public IngredienteRepo getIngredienteRepo() {
@@ -35,5 +41,13 @@ public class IngredienteBean implements Serializable {
 
     public void setIngredientes(List<Ingrediente> ingredientes) {
         this.ingredientes = ingredientes;
+    }
+
+    public Ingrediente getIngrediente() {
+        return ingrediente;
+    }
+
+    public void setIngrediente(Ingrediente ingrediente) {
+        this.ingrediente = ingrediente;
     }
 }
