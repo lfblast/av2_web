@@ -5,13 +5,13 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    <f:metadata>
+<!--    <f:metadata>
         <f:viewAction action="#{ingredienteBean.listar}" />
-    </f:metadata>
+    </f:metadata>-->
     <ui:define name="titulo">Consulta de Ingredientes</ui:define>
     <ui:define name="corpo">
         <h1>Consulta de Ingredientes</h1>
-        <h:dataTable value="#{ingredienteBean.ingredientes}"
+<!--        <h:dataTable value="#{ingredienteBean.ingredientes}"
                      var="ingrediente" border="1" cellspacing="0"
                      cellpadding="2">
             <h:column>
@@ -31,9 +31,14 @@
                     <h:outputText value="#"/>
                 </f:facet>
                 <h:form>
-                    <h:commandLink action="#{ingredienteBean.remover}" value="Remover" />		
+                    <h:link value="Teste" outcome="index" />		
                 </h:form>
             </h:column>
-        </h:dataTable>
+        </h:dataTable>-->
+
+        <h:form>
+            <h:commandLink action = "#{navigationController.showPage}" value = "Go Index"/>
+        </h:form>
+        
     </ui:define>
 </ui:composition>
