@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Consulta de Produtos</ui:define>
+    <ui:define name="corpo">
+        <h1>Consulta de Produtos</h1>
+        <div>
+            <h:form>
+                <p:commandLink action = "index?faces-redirect=true" value = "Voltar"/>
+            </h:form>
+        </div>
+        <div>
+            <h:form>
+                <h:dataTable value="#{produtoBean.produtos}"
+                             var="produto" border="1" cellspacing="0"
+                             cellpadding="2">            
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="ID"/>
+                        </f:facet>
+                        <h:outputText value="#{produto.id}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Código"/>
+                        </f:facet>
+                        <h:outputText value="#{produto.codigo}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Categoria"/>
+                        </f:facet>
+                        <h:outputText value="#{produto.categoria.nome}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Preço"/>
+                        </f:facet>
+                        <h:outputText value="#{produto.preco}">
+                            <f:convertNumber locale="pt_BR" maxFractionDigits="2"
+                                     minFractionDigits="2" />
+                        </h:outputText>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="#"/>
+                        </f:facet>
+                        <h:commandLink action = "#{produtoBean.detalhar}" value = "Detalhes">
+                            <f:param name = "idProd" value = "#{produto.id}" />
+                        </h:commandLink>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+            <h:form>
+                <h:commandLink action = "#{produtoBean.preparaCadastro}" value = "Cadastrar"/>                    
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

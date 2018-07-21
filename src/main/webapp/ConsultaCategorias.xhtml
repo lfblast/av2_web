@@ -7,9 +7,9 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
 
-    <ui:define name="titulo">Consulta de Ingredientes</ui:define>
+    <ui:define name="titulo">Consulta de Categorias</ui:define>
     <ui:define name="corpo">
-        <h1>Consulta de Ingredientes</h1>
+        <h1>Consulta de Categorias</h1>
         <div>
             <h:form>
                 <p:commandLink action = "index?faces-redirect=true" value = "Voltar"/>
@@ -17,33 +17,33 @@
         </div>
         <div>
             <h:form>
-                <h:dataTable value="#{ingredienteBean.ingredientes}"
-                             var="ingrediente" border="1" cellspacing="0"
+                <h:dataTable value="#{categoriaBean.categorias}"
+                             var="categoria" border="1" cellspacing="0"
                              cellpadding="2">            
                     <h:column>
                         <f:facet name="header">
                             <h:outputText value="ID"/>
                         </f:facet>
-                        <h:outputText value="#{ingrediente.id}"/>
+                        <h:outputText value="#{categoria.id}"/>
                     </h:column>
                     <h:column>
                         <f:facet name="header">
                             <h:outputText value="Nome"/>
                         </f:facet>
-                        <h:outputText value="#{ingrediente.nome}"/>
+                        <h:outputText value="#{categoria.nome}"/>
                     </h:column>
                     <h:column>
                         <f:facet name="header">
                             <h:outputText value="#"/>
                         </f:facet>
-                        <h:commandLink action = "#{ingredienteBean.detalhar}" value = "Detalhes">
-                            <f:param name = "idIngr" value = "#{ingrediente.id}" />
+                        <h:commandLink action = "#{categoriaBean.detalhar}" value = "Detalhes">
+                            <f:param name = "idCat" value = "#{categoria.id}" />
                         </h:commandLink>
                     </h:column>
                 </h:dataTable>
             </h:form>
             <h:form>
-                <h:commandLink action = "CadastroIngrediente?faces-redirect=true" value = "Cadastrar"/>                    
+                <h:commandLink action = "CadastroCategoria?faces-redirect=true" value = "Cadastrar"/>                    
             </h:form>
         </div>
     </ui:define>

@@ -4,14 +4,15 @@ import br.edu.infnet.av2.model.Ingrediente;
 import br.edu.infnet.av2.repository.IngredienteRepo;
 import java.io.Serializable;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map;
+import java.util.Optional;
+import javax.faces.context.FacesContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 	
 @Component
-@Scope("request")
+@Scope("session")
 public class IngredienteBean implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -19,19 +20,67 @@ public class IngredienteBean implements Serializable {
     @Autowired
     private IngredienteRepo ingredienteRepo;
     private List<Ingrediente> ingredientes;
-    private Ingrediente ingrediente;
+    private Ingrediente ingrediente = new Ingrediente();
     
-    public void listar() {
-        Logger.getAnonymousLogger().log(Level.INFO, "PASSOU LISTAR");
-        this.ingredientes = ingredienteRepo.findAll();
+    public String listar() {
+        
+        ingrediente = new Ingrediente();
+        ingredientes = ingredienteRepo.findAll();        
+        
+        return "ConsultaIngredientes?faces-redirect=true";
+    }
+    
+    public String detalhar() {
+        
+        String id = recuperaParametro("idIngr");
+        
+        Optional<Ingrediente> ingredienteOpt = ingredienteRepo.findById(new Long(id));
+        ingrediente = ingredienteOpt.get();
+        
+        return "DetalhesIngrediente?faces-redirect=true";
+    }
+    
+    public String cadastrar() {
+        
+        ingredienteRepo.save(ingrediente);
+        
+        return listar();
+    }
+    
+    public String alterar() {
+        
+        String id = recuperaParametro("idIngr");
+        
+        Optional<Ingrediente> ingredienteOpt = ingredienteRepo.findById(new Long(id));
+        Ingrediente ingredienteCadastrado = ingredienteOpt.get();
+        
+        ingredienteCadastrado.setNome(ingrediente.getNome());
+        ingredienteRepo.save(ingredienteCadastrado);
+        
+        return listar();
     }
     
     public String remover() {
-//        ingredienteRepo.delete(ingrediente);
-        Logger.getAnonymousLogger().log(Level.SEVERE, "TESTANDO");
-        return "ok";
+        
+        String id = recuperaParametro("idIngr");
+        
+        Optional<Ingrediente> ingredienteOpt = ingredienteRepo.findById(new Long(id));
+        Ingrediente ingr = ingredienteOpt.get();
+        
+        ingredienteRepo.delete(ingr);
+        
+        return listar();
     }
-
+    
+    private String recuperaParametro(String param) {
+        
+        FacesContext context = FacesContext.getCurrentInstance();
+        Map requestMap = context.getExternalContext().getRequestParameterMap();
+        String parametro = (String)requestMap.get(param);
+        
+        return parametro;
+    }
+    
     public IngredienteRepo getIngredienteRepo() {
         return ingredienteRepo;
     }
