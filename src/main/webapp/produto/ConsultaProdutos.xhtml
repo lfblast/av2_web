@@ -12,14 +12,16 @@
         <h1>Consulta de Produtos</h1>
         <div>
             <h:form>
-                <p:commandLink action = "index?faces-redirect=true" value = "Voltar"/>
+                <p:commandLink action = "/index?faces-redirect=true" value = "Voltar"/>
             </h:form>
         </div>
         <div>
             <h:form>
+                <h:outputText value="Não existem produtos cadastrados." rendered="#{empty produtoBean.produtos}" />
                 <h:dataTable value="#{produtoBean.produtos}"
                              var="produto" border="1" cellspacing="0"
-                             cellpadding="2">            
+                             cellpadding="2"
+                             rendered="#{not empty produtoBean.produtos}">
                     <h:column>
                         <f:facet name="header">
                             <h:outputText value="ID"/>
@@ -31,6 +33,12 @@
                             <h:outputText value="Código"/>
                         </f:facet>
                         <h:outputText value="#{produto.codigo}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Nome"/>
+                        </f:facet>
+                        <h:outputText value="#{produto.nome}"/>
                     </h:column>
                     <h:column>
                         <f:facet name="header">

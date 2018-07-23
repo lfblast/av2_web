@@ -1,5 +1,6 @@
 package br.edu.infnet.av2.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,7 +21,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="pedido")
-public class Pedido {
+public class Pedido implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -32,11 +35,11 @@ public class Pedido {
     
     @ManyToOne
     @JoinColumn(name="atendente_id", nullable=false)
-    private Funcionario atendente;
+    private Atendente atendente;
     
     @ManyToOne
     @JoinColumn(name="entregador_id", nullable=false)
-    private Funcionario entregador;
+    private Motoboy entregador;
     
     @ManyToOne
     @JoinColumn(name="cliente_id", nullable=false)
@@ -71,6 +74,25 @@ public class Pedido {
     @Enumerated(EnumType.STRING)
     private StatusPedido status;
 
+    public Pedido() {
+    }
+
+    public Pedido(List<ProdutoPedido> produtos, Atendente atendente, Motoboy entregador, Cliente cliente, Endereco endereco, boolean entrega, BigDecimal desconto, BigDecimal taxaEntrega, BigDecimal valor, BigDecimal troco, LocalDate data, LocalTime hora, StatusPedido status) {
+        this.produtos = produtos;
+        this.atendente = atendente;
+        this.entregador = entregador;
+        this.cliente = cliente;
+        this.endereco = endereco;
+        this.entrega = entrega;
+        this.desconto = desconto;
+        this.taxaEntrega = taxaEntrega;
+        this.valor = valor;
+        this.troco = troco;
+        this.data = data;
+        this.hora = hora;
+        this.status = status;
+    }
+
     public long getId() {
         return id;
     }
@@ -87,19 +109,19 @@ public class Pedido {
         this.produtos = produtos;
     }
 
-    public Funcionario getAtendente() {
+    public Atendente getAtendente() {
         return atendente;
     }
 
-    public void setAtendente(Funcionario atendente) {
+    public void setAtendente(Atendente atendente) {
         this.atendente = atendente;
     }
 
-    public Funcionario getEntregador() {
+    public Motoboy getEntregador() {
         return entregador;
     }
 
-    public void setEntregador(Funcionario entregador) {
+    public void setEntregador(Motoboy entregador) {
         this.entregador = entregador;
     }
 

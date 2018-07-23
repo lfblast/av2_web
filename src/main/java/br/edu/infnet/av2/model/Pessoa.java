@@ -1,5 +1,6 @@
 package br.edu.infnet.av2.model;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
@@ -12,9 +13,11 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="pessoa")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "tipo")
-public class Pessoa {
+public class Pessoa implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -23,6 +26,13 @@ public class Pessoa {
     
     @Column(name="nome", nullable=false)
     private String nome;
+
+    public Pessoa() {
+    }
+
+    public Pessoa(String nome) {
+        this.nome = nome;
+    }
 
     public long getId() {
         return id;

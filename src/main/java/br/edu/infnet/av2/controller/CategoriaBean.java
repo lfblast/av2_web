@@ -27,7 +27,7 @@ public class CategoriaBean implements Serializable {
         categoria = new Categoria();
         categorias = categoriaRepo.findAll();        
         
-        return "ConsultaCategorias?faces-redirect=true";
+        return "/categoria/ConsultaCategorias?faces-redirect=true";
     }
     
     public String detalhar() {
@@ -37,7 +37,7 @@ public class CategoriaBean implements Serializable {
         Optional<Categoria> categoriaOpt = categoriaRepo.findById(new Long(id));
         categoria = categoriaOpt.get();
         
-        return "DetalhesCategoria?faces-redirect=true";
+        return "/categoria/DetalhesCategoria?faces-redirect=true";
     }
     
     public String cadastrar() {

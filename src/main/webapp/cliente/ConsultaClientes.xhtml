@@ -7,43 +7,51 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
 
-    <ui:define name="titulo">Consulta de Ingredientes</ui:define>
+    <ui:define name="titulo">Consulta de Clientes</ui:define>
     <ui:define name="corpo">
-        <h1>Consulta de Ingredientes</h1>
+        <h1>Consulta de Clientes</h1>
         <div>
             <h:form>
-                <p:commandLink action = "index?faces-redirect=true" value = "Voltar"/>
+                <p:commandLink action = "/index?faces-redirect=true" value = "Voltar"/>
             </h:form>
         </div>
         <div>
             <h:form>
-                <h:dataTable value="#{ingredienteBean.ingredientes}"
-                             var="ingrediente" border="1" cellspacing="0"
-                             cellpadding="2">            
+                <h:outputText value="Não existem clientes cadastrados." rendered="#{empty clienteBean.clientes}" />
+                <h:dataTable value="#{clienteBean.clientes}"
+                             var="cliente" border="1" cellspacing="0"
+                             cellpadding="2"
+                             rendered="#{not empty clienteBean.clientes}">            
                     <h:column>
                         <f:facet name="header">
                             <h:outputText value="ID"/>
                         </f:facet>
-                        <h:outputText value="#{ingrediente.id}"/>
+                        <h:outputText value="#{cliente.id}"/>
                     </h:column>
                     <h:column>
                         <f:facet name="header">
                             <h:outputText value="Nome"/>
                         </f:facet>
-                        <h:outputText value="#{ingrediente.nome}"/>
+                        <h:outputText value="#{cliente.nome}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Telefone"/>
+                        </f:facet>
+                        <h:outputText value="#{cliente.telefone}"/>
                     </h:column>
                     <h:column>
                         <f:facet name="header">
                             <h:outputText value="#"/>
                         </f:facet>
-                        <h:commandLink action = "#{ingredienteBean.detalhar}" value = "Detalhes">
-                            <f:param name = "idIngr" value = "#{ingrediente.id}" />
+                        <h:commandLink action = "#{clienteBean.detalhar}" value = "Detalhes">
+                            <f:param name = "idCli" value = "#{cliente.id}" />
                         </h:commandLink>
                     </h:column>
                 </h:dataTable>
             </h:form>
             <h:form>
-                <h:commandLink action = "CadastroIngrediente?faces-redirect=true" value = "Cadastrar"/>                    
+                <h:commandLink action = "CadastroCliente?faces-redirect=true" value = "Cadastrar"/>                    
             </h:form>
         </div>
     </ui:define>

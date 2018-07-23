@@ -1,5 +1,7 @@
 package br.edu.infnet.av2.model;
 
+import java.io.Serializable;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +13,10 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="produto_pedido")
-public class ProdutoPedido {
+@Cacheable(false)
+public class ProdutoPedido implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -32,6 +37,16 @@ public class ProdutoPedido {
     @Column(name="obs")
     private String obs;
 
+    public ProdutoPedido() {
+    }
+
+    public ProdutoPedido(Produto produto, Pedido pedido, int quantidade, String obs) {
+        this.produto = produto;
+        this.pedido = pedido;
+        this.quantidade = quantidade;
+        this.obs = obs;
+    }
+    
     public long getId() {
         return id;
     }

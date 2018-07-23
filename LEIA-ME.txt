@@ -1,0 +1,11 @@
+IMPORTANTE --> Foram feitos todos os CRUD's, menos o de PEDIDO devido à falta de tempo após os problemas do moodle. Enviamos um email para tentar postergar a data de entrega e, caso seja possível, pretendo finalizar melhor o trabalho.
+
+
+Foram criados dois usuários:
+1- Usuario: gerente
+   Senha: 123
+2- Atendente: atendente
+   Senha: 123
+
+Cada um respectivamente com os papéis de GERENTE e ATENDENTE. Com eles, é possível testar as autorizações nas páginas.
+IMPORTANTE- Não foi feita uma página para demonstrar a falta de permissão para acessar uma página. Ocorrerá um erro 403 normal do http.

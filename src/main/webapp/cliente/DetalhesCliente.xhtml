@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Detalhes do Cliente</ui:define>
+    <ui:define name="corpo">
+        <h1>Detalhes do Cliente</h1>
+        <div>
+            <h:form>
+                <p:commandLink action = "#{clienteBean.listar}" value = "Voltar"/>
+            </h:form>
+        </div>
+        <div>
+            <h:form>
+                <table>
+                    <tr>
+                        <td>Nome:</td>
+                        <td>
+                            <h:inputText size="60"
+                                         value="#{clienteBean.cliente.nome}"
+                                         label="Nome" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Telefone:</td>
+                        <td>
+                            <h:inputText size="60"
+                                         maxlength="9"
+                                         value="#{clienteBean.cliente.telefone}"
+                                         label="Nome" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Endereços:</td>
+                        <td>
+                            <h:outputText value="Não existem endereços cadastrados para o cliente" 
+                                          rendered="#{empty clienteBean.cliente.enderecos}" />
+                            <h:dataTable value="#{clienteBean.cliente.enderecos}"
+                                         var="endereco" border="1" cellspacing="0"
+                                         cellpadding="2"
+                                         rendered="#{not empty clienteBean.cliente.enderecos}">
+                                <h:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Rua"/>
+                                    </f:facet>
+                                    <h:outputText value="#{endereco.rua}"/>
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Número"/>
+                                    </f:facet>
+                                    <h:outputText value="#{endereco.numero}"/>
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Referência"/>
+                                    </f:facet>
+                                    <h:outputText value="#{endereco.referencia}"/>
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="#"/>
+                                    </f:facet>
+                                    <h:commandLink action = "#{enderecoBean.remover}" value = "Remover">
+                                        <f:param name = "idEnd" value = "#{endereco.id}" />
+                                        <f:param name = "idCli" value = "#{clienteBean.cliente.id}" />
+                                    </h:commandLink>
+                                </h:column>
+                            </h:dataTable>
+                        </td>
+                    </tr>
+                </table>
+                <h:commandButton action = "#{clienteBean.alterar}" value = "Alterar">
+                    <f:param name = "idCli" value = "#{clienteBean.cliente.id}" />
+                </h:commandButton>
+            </h:form>
+            <h:form>
+                <h:commandButton action = "#{enderecoBean.preparaCadastro}" value = "Cadastrar Endereço" >
+                    <f:param name = "idCli" value = "#{clienteBean.cliente.id}" />
+                </h:commandButton>
+            </h:form>
+            <h:form>
+                <h:commandButton action = "#{clienteBean.remover}" value = "Remover" >
+                    <f:param name = "idCli" value = "#{clienteBean.cliente.id}" />
+                </h:commandButton>
+            </h:form>
+        </div>        
+    </ui:define>
+</ui:composition>

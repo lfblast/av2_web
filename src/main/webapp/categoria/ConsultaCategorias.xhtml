@@ -12,14 +12,16 @@
         <h1>Consulta de Categorias</h1>
         <div>
             <h:form>
-                <p:commandLink action = "index?faces-redirect=true" value = "Voltar"/>
+                <p:commandLink action = "/index?faces-redirect=true" value = "Voltar"/>
             </h:form>
         </div>
         <div>
             <h:form>
+                <h:outputText value="Não existem categorias cadastradas." rendered="#{empty categoriaBean.categorias}" />
                 <h:dataTable value="#{categoriaBean.categorias}"
                              var="categoria" border="1" cellspacing="0"
-                             cellpadding="2">            
+                             cellpadding="2"
+                             rendered="#{not empty categoriaBean.categorias}">            
                     <h:column>
                         <f:facet name="header">
                             <h:outputText value="ID"/>

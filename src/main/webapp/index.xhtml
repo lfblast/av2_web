@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 <ui:composition template="/WEB-INF/template/Layout.xhtml"
                 xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
@@ -12,6 +11,18 @@
         <h1>Escolha um item:</h1>
         <div>
             <h:form>
+                <p:commandLink action = "#{clienteBean.listar}" value = "Clientes"/>
+            </h:form>
+            <h:form>
+                <p:commandLink action = "#{atendenteBean.listar}" value = "Atendente"/>
+            </h:form>
+            <h:form>
+                <p:commandLink action = "#{motoboyBean.listar}" value = "Motoboy"/>
+            </h:form>
+            <h:form>
+                <p:commandLink action = "#{gerenteBean.listar}" value = "Gerente"/>
+            </h:form>
+            <h:form>
                 <p:commandLink action = "#{ingredienteBean.listar}" value = "Ingredientes"/>
             </h:form>
             <h:form>
@@ -20,6 +31,10 @@
             <h:form>
                 <p:commandLink action = "#{produtoBean.listar}" value = "Produtos"/>
             </h:form>
+            <h:form>
+                <p:commandLink action = "#{produtoBean.listar}" value = "Pedidos"/>
+            </h:form>
+            <a href="/logout">Fazer Logout</a>
         </div>               
     </ui:define>
 </ui:composition>

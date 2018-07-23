@@ -27,7 +27,7 @@ public class IngredienteBean implements Serializable {
         ingrediente = new Ingrediente();
         ingredientes = ingredienteRepo.findAll();        
         
-        return "ConsultaIngredientes?faces-redirect=true";
+        return "/ingrediente/ConsultaIngredientes?faces-redirect=true";
     }
     
     public String detalhar() {
@@ -37,7 +37,7 @@ public class IngredienteBean implements Serializable {
         Optional<Ingrediente> ingredienteOpt = ingredienteRepo.findById(new Long(id));
         ingrediente = ingredienteOpt.get();
         
-        return "DetalhesIngrediente?faces-redirect=true";
+        return "/ingrediente/DetalhesIngrediente?faces-redirect=true";
     }
     
     public String cadastrar() {

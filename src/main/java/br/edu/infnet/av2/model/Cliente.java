@@ -1,23 +1,35 @@
 package br.edu.infnet.av2.model;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
-public class Cliente extends Pessoa {
+@Table(name = "cliente")
+public class Cliente extends Pessoa implements Serializable {
     
-    @OneToMany(mappedBy="cliente", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    private static final long serialVersionUID = 1L;
+    
+    @OneToMany(mappedBy="cliente", cascade=CascadeType.ALL, orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Endereco> enderecos;
-    
-    @OneToMany(mappedBy="cliente", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-    private List<Pedido> pedidos;
     
     @Column(name="telefone")
     private int telefone;
+
+    public Cliente() {
+    }
+
+    public Cliente(List<Endereco> enderecos, int telefone) {
+        this.enderecos = enderecos;
+        this.telefone = telefone;
+    }
 
     public List<Endereco> getEnderecos() {
         return enderecos;
@@ -25,14 +37,6 @@ public class Cliente extends Pessoa {
 
     public void setEnderecos(List<Endereco> enderecos) {
         this.enderecos = enderecos;
-    }
-
-    public List<Pedido> getPedidos() {
-        return pedidos;
-    }
-
-    public void setPedidos(List<Pedido> pedidos) {
-        this.pedidos = pedidos;
     }
 
     public int getTelefone() {

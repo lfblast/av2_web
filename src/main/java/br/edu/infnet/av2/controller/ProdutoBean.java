@@ -7,6 +7,7 @@ import br.edu.infnet.av2.repository.CategoriaRepo;
 import br.edu.infnet.av2.repository.IngredienteRepo;
 import br.edu.infnet.av2.repository.ProdutoRepo;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,34 +32,57 @@ public class ProdutoBean implements Serializable {
     private Produto produto = new Produto();
     private List<Categoria> categorias;
     private List <Ingrediente> ingredientes;
+    private List<String> selectedIngr = new ArrayList<>();
     
     public String listar() {
         
         produto = new Produto();
+        produto.setCategoria(new Categoria());
         produtos = produtoRepo.findAll();        
         
-        return "ConsultaProdutos?faces-redirect=true";
+        return "/produto/ConsultaProdutos?faces-redirect=true";
     }
     
     public String detalhar() {
         
         String id = recuperaParametro("idProd");
         
+        recuperaDadosCadastro();
+        
         Optional<Produto> produtoOpt = produtoRepo.findById(new Long(id));
         produto = produtoOpt.get();
         
-        return "DetalhesProduto?faces-redirect=true";
+        selectedIngr = new ArrayList<>();
+        for(Ingrediente ingr : produto.getIngredientes()) {
+            Long idIngr = ingr.getId();            
+            selectedIngr.add(idIngr.toString());
+        }
+        
+        return "/produto/DetalhesProduto?faces-redirect=true";
     }
     
     public String preparaCadastro() {
         
-        categorias = categoriaRepo.findAll();
-        ingredientes = ingredienteRepo.findAll();
+        recuperaDadosCadastro();
         
-        return "CadastroProduto?faces-redirect=true";
+        return "/produto/CadastroProduto?faces-redirect=true";
     }
     
     public String cadastrar() {
+        
+        Optional<Categoria> categoriaOpt = categoriaRepo.findById(produto.getCategoria().getId());
+        Categoria categoria = categoriaOpt.get();
+        produto.setCategoria(categoria);
+        
+        Optional<Ingrediente> ingredienteOpt;
+        Ingrediente ingrediente;
+        List<Ingrediente> ingr = new ArrayList<>();
+        for(String id : selectedIngr) {
+            ingredienteOpt = ingredienteRepo.findById(new Long(id));
+            ingrediente = ingredienteOpt.get();
+            ingr.add(ingrediente);
+        }
+        produto.setIngredientes(ingr);
         
         produtoRepo.save(produto);
         
@@ -70,9 +94,38 @@ public class ProdutoBean implements Serializable {
         String id = recuperaParametro("idProd");
         
         Optional<Produto> produtoOpt = produtoRepo.findById(new Long(id));
-        Produto produtoCadastrado = produtoOpt.get();
+        Produto produtoCadastrado = produtoOpt.get();        
         
+        Optional<Categoria> categoriaOpt = categoriaRepo.findById(produto.getCategoria().getId());
+        Categoria categoria = categoriaOpt.get();
+        produto.setCategoria(categoria);
+        
+        Optional<Ingrediente> ingredienteOpt;
+        Ingrediente ingrediente;
+        List<Ingrediente> ingr = new ArrayList<>();
+        for(String idIngr : selectedIngr) {
+            ingredienteOpt = ingredienteRepo.findById(new Long(idIngr));
+            ingrediente = ingredienteOpt.get();
+            ingr.add(ingrediente);
+        }
+        produto.setIngredientes(ingr);
+        
+        ingr = new ArrayList<>();
+        for(Ingrediente ingrJaCadastrado : produtoCadastrado.getIngredientes()) {
+            ingr.add(ingrJaCadastrado);
+        }
+        for(Ingrediente ingrRemover : ingr) {
+            produtoCadastrado.getIngredientes().remove(ingrRemover);
+        }        
+        
+        produtoCadastrado.setCodigo(produto.getCodigo());
         produtoCadastrado.setNome(produto.getNome());
+        produtoCadastrado.setCategoria(produto.getCategoria());
+        produtoCadastrado.setPreco(produto.getPreco());        
+        for(Ingrediente ingrASerCadastrado : produto.getIngredientes()) {
+            produtoCadastrado.getIngredientes().add(ingrASerCadastrado);
+        }
+        
         produtoRepo.save(produtoCadastrado);
         
         return listar();
@@ -97,6 +150,12 @@ public class ProdutoBean implements Serializable {
         String parametro = (String)requestMap.get(param);
         
         return parametro;
+    }
+    
+    private void recuperaDadosCadastro() {
+        
+        categorias = categoriaRepo.findAll();
+        ingredientes = ingredienteRepo.findAll();
     }
     
     public ProdutoRepo getProdutoRepo() {
@@ -153,5 +212,13 @@ public class ProdutoBean implements Serializable {
 
     public void setIngredientes(List<Ingrediente> ingredientes) {
         this.ingredientes = ingredientes;
+    }
+
+    public List<String> getSelectedIngr() {
+        return selectedIngr;
+    }
+
+    public void setSelectedIngr(List<String> selectedIngr) {
+        this.selectedIngr = selectedIngr;
     }
 }

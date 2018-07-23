@@ -1,8 +1,8 @@
 package br.edu.infnet.av2.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,7 +17,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="produto")
-public class Produto {
+public class Produto implements Serializable {
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -37,13 +37,24 @@ public class Produto {
     @Column(name="preco", nullable=false)
     private BigDecimal preco;
     
-    @ManyToMany(cascade = { CascadeType.ALL }, fetch=FetchType.EAGER)
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
         name = "produto_ingrediente", 
         joinColumns = { @JoinColumn(name = "produto_id") }, 
         inverseJoinColumns = { @JoinColumn(name = "ingrediente_id") }
     )
     private List<Ingrediente> ingredientes;
+
+    public Produto() {
+    }
+    
+    public Produto(int codigo, String nome, Categoria categoria, BigDecimal preco, List<Ingrediente> ingredientes) {
+        this.codigo = codigo;
+        this.nome = nome;
+        this.categoria = categoria;
+        this.preco = preco;
+        this.ingredientes = ingredientes;
+    }
     
     public long getId() {
         return id;

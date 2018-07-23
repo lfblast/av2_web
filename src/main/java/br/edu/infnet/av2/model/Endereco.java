@@ -1,5 +1,7 @@
 package br.edu.infnet.av2.model;
 
+import java.io.Serializable;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +13,10 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="endereco")
-public class Endereco {
+@Cacheable(false)
+public class Endereco implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -31,6 +36,16 @@ public class Endereco {
     @JoinColumn(name="cliente_id", nullable=false)
     private Cliente cliente;
 
+    public Endereco() {
+    }
+
+    public Endereco(String rua, int numero, String referencia, Cliente cliente) {
+        this.rua = rua;
+        this.numero = numero;
+        this.referencia = referencia;
+        this.cliente = cliente;
+    }
+    
     public long getId() {
         return id;
     }

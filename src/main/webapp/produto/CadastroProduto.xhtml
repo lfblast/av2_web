@@ -37,23 +37,23 @@
                     <tr>
                         <td>Categoria:</td>
                         <td>
-                            <h:selectOneMenu
-                                value="#{produtoBean.produto.categoria}"
+                            <h:selectOneMenu                                
+                                value="#{produtoBean.produto.categoria.id}"
                                 label="Categoria do Produto">
                                 <f:selectItems
                                     value="#{produtoBean.categorias}"
                                     var="categoria"
                                     itemValue="#{categoria.id}"
                                     itemLabel="#{categoria.nome}"/>
-                            </h:selectOneMenu>
+                            </h:selectOneMenu>                            
                         </td>
                     </tr>
                     <tr>
                         <td>Ingredientes:</td>
                         <td>
                             <h:selectManyCheckbox layout="pageDirection"
-                                value="#{produtoBean.produto.ingredientes}"
-                                label="Ingredientes do Produto">
+                                                  value="#{produtoBean.selectedIngr}"
+                                                  label="Ingredientes do Produto">
                                 <f:selectItems
                                     value="#{produtoBean.ingredientes}"
                                     var="ingrediente"
