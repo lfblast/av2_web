@@ -1,17 +1,17 @@
 package br.edu.infnet.av2.controller;
 
+import br.edu.infnet.av2.controller.util.ControllerUtil;
+import static br.edu.infnet.av2.controller.util.ControllerUtil.recuperaParametro;
 import br.edu.infnet.av2.model.Categoria;
 import br.edu.infnet.av2.model.Ingrediente;
 import br.edu.infnet.av2.model.Produto;
-import br.edu.infnet.av2.repository.CategoriaRepo;
-import br.edu.infnet.av2.repository.IngredienteRepo;
-import br.edu.infnet.av2.repository.ProdutoRepo;
+import br.edu.infnet.av2.service.CategoriaService;
+import br.edu.infnet.av2.service.IngredienteService;
+import br.edu.infnet.av2.service.ProdutoService;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import javax.faces.context.FacesContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -23,11 +23,11 @@ public class ProdutoBean implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @Autowired
-    private ProdutoRepo produtoRepo;
+    private ProdutoService produtoService;
     @Autowired
-    private CategoriaRepo categoriaRepo;
+    private CategoriaService categoriaService;
     @Autowired
-    private IngredienteRepo ingredienteRepo;
+    private IngredienteService ingredienteService;
     private List<Produto> produtos;
     private Produto produto = new Produto();
     private List<Categoria> categorias;
@@ -38,7 +38,7 @@ public class ProdutoBean implements Serializable {
         
         produto = new Produto();
         produto.setCategoria(new Categoria());
-        produtos = produtoRepo.findAll();        
+        produtos = produtoService.findAll();        
         
         return "/produto/ConsultaProdutos?faces-redirect=true";
     }
@@ -48,9 +48,7 @@ public class ProdutoBean implements Serializable {
         String id = recuperaParametro("idProd");
         
         recuperaDadosCadastro();
-        
-        Optional<Produto> produtoOpt = produtoRepo.findById(new Long(id));
-        produto = produtoOpt.get();
+        produto = produtoService.findById(new Long(id));
         
         selectedIngr = new ArrayList<>();
         for(Ingrediente ingr : produto.getIngredientes()) {
@@ -70,21 +68,19 @@ public class ProdutoBean implements Serializable {
     
     public String cadastrar() {
         
-        Optional<Categoria> categoriaOpt = categoriaRepo.findById(produto.getCategoria().getId());
-        Categoria categoria = categoriaOpt.get();
+        Categoria categoria = categoriaService.findById(produto.getCategoria().getId());
         produto.setCategoria(categoria);
         
         Optional<Ingrediente> ingredienteOpt;
         Ingrediente ingrediente;
         List<Ingrediente> ingr = new ArrayList<>();
         for(String id : selectedIngr) {
-            ingredienteOpt = ingredienteRepo.findById(new Long(id));
-            ingrediente = ingredienteOpt.get();
+            ingrediente = ingredienteService.findById(new Long(id));
             ingr.add(ingrediente);
         }
         produto.setIngredientes(ingr);
         
-        produtoRepo.save(produto);
+        produtoService.save(produto);
         
         return listar();
     }
@@ -92,20 +88,15 @@ public class ProdutoBean implements Serializable {
     public String alterar() {
         
         String id = recuperaParametro("idProd");
-        
-        Optional<Produto> produtoOpt = produtoRepo.findById(new Long(id));
-        Produto produtoCadastrado = produtoOpt.get();        
-        
-        Optional<Categoria> categoriaOpt = categoriaRepo.findById(produto.getCategoria().getId());
-        Categoria categoria = categoriaOpt.get();
+        Produto produtoCadastrado = produtoService.findById(new Long(id));        
+        Categoria categoria = categoriaService.findById(produto.getCategoria().getId());
         produto.setCategoria(categoria);
         
         Optional<Ingrediente> ingredienteOpt;
         Ingrediente ingrediente;
         List<Ingrediente> ingr = new ArrayList<>();
-        for(String idIngr : selectedIngr) {
-            ingredienteOpt = ingredienteRepo.findById(new Long(idIngr));
-            ingrediente = ingredienteOpt.get();
+        for(String idIngr : selectedIngr) {            
+            ingrediente = ingredienteService.findById(new Long(idIngr));
             ingr.add(ingrediente);
         }
         produto.setIngredientes(ingr);
@@ -126,60 +117,49 @@ public class ProdutoBean implements Serializable {
             produtoCadastrado.getIngredientes().add(ingrASerCadastrado);
         }
         
-        produtoRepo.save(produtoCadastrado);
+        produtoService.save(produtoCadastrado);
         
         return listar();
     }
     
     public String remover() {
         
-        String id = recuperaParametro("idProd");
+        String id = ControllerUtil.recuperaParametro("idProd");
+        Produto ingr = produtoService.findById(new Long(id));
         
-        Optional<Produto> produtoOpt = produtoRepo.findById(new Long(id));
-        Produto ingr = produtoOpt.get();
-        
-        produtoRepo.delete(ingr);
+        produtoService.delete(ingr);
         
         return listar();
     }
     
-    private String recuperaParametro(String param) {
-        
-        FacesContext context = FacesContext.getCurrentInstance();
-        Map requestMap = context.getExternalContext().getRequestParameterMap();
-        String parametro = (String)requestMap.get(param);
-        
-        return parametro;
-    }
-    
     private void recuperaDadosCadastro() {
         
-        categorias = categoriaRepo.findAll();
-        ingredientes = ingredienteRepo.findAll();
-    }
-    
-    public ProdutoRepo getProdutoRepo() {
-        return produtoRepo;
+        categorias = categoriaService.findAll();
+        ingredientes = ingredienteService.findAll();
     }
 
-    public void setProdutoRepo(ProdutoRepo produtoRepo) {
-        this.produtoRepo = produtoRepo;
+    public ProdutoService getProdutoService() {
+        return produtoService;
     }
 
-    public CategoriaRepo getCategoriaRepo() {
-        return categoriaRepo;
+    public void setProdutoService(ProdutoService produtoService) {
+        this.produtoService = produtoService;
     }
 
-    public void setCategoriaRepo(CategoriaRepo categoriaRepo) {
-        this.categoriaRepo = categoriaRepo;
+    public CategoriaService getCategoriaService() {
+        return categoriaService;
     }
 
-    public IngredienteRepo getIngredienteRepo() {
-        return ingredienteRepo;
+    public void setCategoriaService(CategoriaService categoriaService) {
+        this.categoriaService = categoriaService;
     }
 
-    public void setIngredienteRepo(IngredienteRepo ingredienteRepo) {
-        this.ingredienteRepo = ingredienteRepo;
+    public IngredienteService getIngredienteService() {
+        return ingredienteService;
+    }
+
+    public void setIngredienteService(IngredienteService ingredienteService) {
+        this.ingredienteService = ingredienteService;
     }
 
     public List<Produto> getProdutos() {

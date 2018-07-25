@@ -1,14 +1,13 @@
 package br.edu.infnet.av2.controller;
 
+import br.edu.infnet.av2.controller.util.ControllerUtil;
 import br.edu.infnet.av2.model.Atendente;
+import br.edu.infnet.av2.model.Papeis;
 import br.edu.infnet.av2.model.Papel;
-import br.edu.infnet.av2.repository.AtendenteRepo;
-import br.edu.infnet.av2.repository.PapelRepo;
+import br.edu.infnet.av2.service.AtendenteService;
+import br.edu.infnet.av2.service.PapelService;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import javax.faces.context.FacesContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -21,26 +20,24 @@ public class AtendenteBean implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @Autowired
-    private AtendenteRepo atendenteRepo;
+    private AtendenteService atendenteService;
     @Autowired
-    private PapelRepo papelRepo;
+    private PapelService papelService;
     private List<Atendente> atendentes;
     private Atendente atendente = new Atendente();
     
     public String listar() {
         
         atendente = new Atendente();
-        atendentes = atendenteRepo.findAll();        
+        atendentes = atendenteService.findAll();        
         
         return "/atendente/ConsultaAtendentes?faces-redirect=true";
     }
     
     public String detalhar() {
         
-        String id = recuperaParametro("idAtend");
-        
-        Optional<Atendente> atendenteOpt = atendenteRepo.findById(new Long(id));
-        atendente = atendenteOpt.get();
+        String id = ControllerUtil.recuperaParametro("idAtend");
+        atendente = atendenteService.findById(new Long(id));
         
         return "/atendente/DetalhesAtendente?faces-redirect=true";
     }
@@ -48,50 +45,40 @@ public class AtendenteBean implements Serializable {
     @Transactional(readOnly = false)
     public String cadastrar() {
         
-        Papel papelAtendente = papelRepo.findByNomePapel("ROLE_ATENDENTE");
+        Papel papelAtendente = papelService.findByNomePapel(Papeis.ROLE_ATENDENTE.toString());
         atendente.getPapeis().add(papelAtendente);
-        atendenteRepo.save(atendente);
+        atendenteService.save(atendente);
         
         return listar();
     }
     
     public String remover() {
         
-        String id = recuperaParametro("idAtend");
+        String id = ControllerUtil.recuperaParametro("idAtend");
         
-        Optional<Atendente> atendenteOpt = atendenteRepo.findById(new Long(id));
-        Atendente ingr = atendenteOpt.get();
+        Atendente atend = atendenteService.findById(new Long(id));
         
-        atendenteRepo.delete(ingr);
+        atendenteService.delete(atend);
         
         return listar();
     }
+
+    public AtendenteService getAtendenteService() {
+        return atendenteService;
+    }
+
+    public void setAtendenteService(AtendenteService atendenteService) {
+        this.atendenteService = atendenteService;
+    }
+
+    public PapelService getPapelService() {
+        return papelService;
+    }
+
+    public void setPapelService(PapelService papelService) {
+        this.papelService = papelService;
+    }
     
-    private String recuperaParametro(String param) {
-        
-        FacesContext context = FacesContext.getCurrentInstance();
-        Map requestMap = context.getExternalContext().getRequestParameterMap();
-        String parametro = (String)requestMap.get(param);
-        
-        return parametro;
-    }
-
-    public AtendenteRepo getAtendenteRepo() {
-        return atendenteRepo;
-    }
-
-    public void setAtendenteRepo(AtendenteRepo atendenteRepo) {
-        this.atendenteRepo = atendenteRepo;
-    }
-
-    public PapelRepo getPapelRepo() {
-        return papelRepo;
-    }
-
-    public void setPapelRepo(PapelRepo papelRepo) {
-        this.papelRepo = papelRepo;
-    }
-
     public List<Atendente> getAtendentes() {
         return atendentes;
     }

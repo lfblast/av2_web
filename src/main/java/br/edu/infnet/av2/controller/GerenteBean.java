@@ -1,14 +1,13 @@
 package br.edu.infnet.av2.controller;
 
+import br.edu.infnet.av2.controller.util.ControllerUtil;
 import br.edu.infnet.av2.model.Gerente;
+import br.edu.infnet.av2.model.Papeis;
 import br.edu.infnet.av2.model.Papel;
-import br.edu.infnet.av2.repository.GerenteRepo;
-import br.edu.infnet.av2.repository.PapelRepo;
+import br.edu.infnet.av2.service.GerenteService;
+import br.edu.infnet.av2.service.PapelService;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import javax.faces.context.FacesContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -21,26 +20,24 @@ public class GerenteBean implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @Autowired
-    private GerenteRepo gerenteRepo;
+    private GerenteService gerenteService;
     @Autowired
-    private PapelRepo papelRepo;
+    private PapelService papelService;
     private List<Gerente> gerentes;
     private Gerente gerente = new Gerente();
     
     public String listar() {
         
         gerente = new Gerente();
-        gerentes = gerenteRepo.findAll();        
+        gerentes = gerenteService.findAll();        
         
         return "/gerente/ConsultaGerentes?faces-redirect=true";
     }
     
     public String detalhar() {
         
-        String id = recuperaParametro("idGer");
-        
-        Optional<Gerente> gerenteOpt = gerenteRepo.findById(new Long(id));
-        gerente = gerenteOpt.get();
+        String id = ControllerUtil.recuperaParametro("idGer");
+        gerente = gerenteService.findById(new Long(id));
         
         return "/gerente/DetalhesGerente?faces-redirect=true";
     }
@@ -48,48 +45,37 @@ public class GerenteBean implements Serializable {
     @Transactional(readOnly = false)
     public String cadastrar() {
         
-        Papel papelGerente = papelRepo.findByNomePapel("ROLE_GERENTE");
+        Papel papelGerente = papelService.findByNomePapel(Papeis.ROLE_GERENTE.toString());
         gerente.getPapeis().add(papelGerente);
-        gerenteRepo.save(gerente);
+        gerenteService.save(gerente);
         
         return listar();
     }
     
     public String remover() {
         
-        String id = recuperaParametro("idGer");
+        String id = ControllerUtil.recuperaParametro("idGer");
+        Gerente ger = gerenteService.findById(new Long(id));
         
-        Optional<Gerente> gerenteOpt = gerenteRepo.findById(new Long(id));
-        Gerente ingr = gerenteOpt.get();
-        
-        gerenteRepo.delete(ingr);
+        gerenteService.delete(ger);
         
         return listar();
     }
-    
-    private String recuperaParametro(String param) {
-        
-        FacesContext context = FacesContext.getCurrentInstance();
-        Map requestMap = context.getExternalContext().getRequestParameterMap();
-        String parametro = (String)requestMap.get(param);
-        
-        return parametro;
+
+    public GerenteService getGerenteService() {
+        return gerenteService;
     }
 
-    public GerenteRepo getGerenteRepo() {
-        return gerenteRepo;
+    public void setGerenteService(GerenteService gerenteService) {
+        this.gerenteService = gerenteService;
     }
 
-    public void setGerenteRepo(GerenteRepo gerenteRepo) {
-        this.gerenteRepo = gerenteRepo;
+    public PapelService getPapelService() {
+        return papelService;
     }
 
-    public PapelRepo getPapelRepo() {
-        return papelRepo;
-    }
-
-    public void setPapelRepo(PapelRepo papelRepo) {
-        this.papelRepo = papelRepo;
+    public void setPapelService(PapelService papelService) {
+        this.papelService = papelService;
     }
 
     public List<Gerente> getGerentes() {

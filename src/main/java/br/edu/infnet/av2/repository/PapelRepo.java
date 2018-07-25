@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface PapelRepo extends JpaRepository<Papel, Long> {
     
     @Query("select r from Papel r where r.nomePapel = ?1")
-    Papel findByNomePapel(String nomePapel);
+    public Papel findByNomePapel(String nomePapel);
 }

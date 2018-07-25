@@ -3,6 +3,7 @@ package br.edu.infnet.av2;
 import br.edu.infnet.av2.model.Atendente;
 import br.edu.infnet.av2.model.Gerente;
 import br.edu.infnet.av2.model.Motoboy;
+import br.edu.infnet.av2.model.Papeis;
 import br.edu.infnet.av2.model.Papel;
 import br.edu.infnet.av2.repository.AtendenteRepo;
 import br.edu.infnet.av2.repository.GerenteRepo;
@@ -37,9 +38,9 @@ public class Av2WebApplication extends SpringBootServletInitializer implements C
     
     @Override
     public void run(String... args) throws Exception {
-        Papel gerenteRole = new Papel("ROLE_GERENTE");
-        Papel atendenteRole = new Papel("ROLE_ATENDENTE");
-        Papel usuarioRole = new Papel("ROLE_USUARIO");
+        Papel gerenteRole = new Papel(Papeis.ROLE_GERENTE.toString());
+        Papel atendenteRole = new Papel(Papeis.ROLE_ATENDENTE.toString());
+        Papel usuarioRole = new Papel(Papeis.ROLE_USUARIO.toString());
 
         Gerente gerente = new Gerente(123, "gerente", new BCryptPasswordEncoder().encode("123"), "Gerente");
         gerente.getPapeis().add(gerenteRole);

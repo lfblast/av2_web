@@ -1,14 +1,13 @@
 package br.edu.infnet.av2.controller;
 
+import br.edu.infnet.av2.controller.util.ControllerUtil;
+import static br.edu.infnet.av2.controller.util.ControllerUtil.recuperaParametro;
 import br.edu.infnet.av2.model.Cliente;
 import br.edu.infnet.av2.model.Endereco;
-import br.edu.infnet.av2.repository.ClienteRepo;
-import br.edu.infnet.av2.repository.EnderecoRepo;
+import br.edu.infnet.av2.service.ClienteService;
+import br.edu.infnet.av2.service.EnderecoService;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import javax.faces.context.FacesContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -20,9 +19,9 @@ public class EnderecoBean implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @Autowired
-    private EnderecoRepo enderecoRepo;
+    private EnderecoService enderecoService;
     @Autowired
-    private ClienteRepo clienteRepo;
+    private ClienteService clienteService;
     private List<Endereco> enderecos;
     private Endereco endereco = new Endereco();
     private Cliente cliente = new Cliente();
@@ -32,12 +31,10 @@ public class EnderecoBean implements Serializable {
         cliente = new Cliente();
         
         String id = recuperaParametro("idCli");
-        
-        Optional<Cliente> clienteOpt = clienteRepo.findById(new Long(id));
-        cliente = clienteOpt.get();
+        cliente = clienteService.findById(new Long(id));
         
         endereco.setCliente(cliente);
-        enderecoRepo.save(endereco);
+        enderecoService.save(endereco);
         
         return "ConsultaClientes?faces-redirect=true";
     }
@@ -46,18 +43,14 @@ public class EnderecoBean implements Serializable {
         
         cliente = new Cliente();
         
-        String id = recuperaParametro("idEnd");
+        String id = ControllerUtil.recuperaParametro("idEnd");
+        Endereco end = enderecoService.findById(new Long(id));
         
-        Optional<Endereco> enderecoOpt = enderecoRepo.findById(new Long(id));
-        Endereco end = enderecoOpt.get();
-        
-        id = recuperaParametro("idCli");
-        
-        Optional<Cliente> clienteOpt = clienteRepo.findById(new Long(id));
-        cliente = clienteOpt.get();
+        id = ControllerUtil.recuperaParametro("idCli");
+        cliente = clienteService.findById(new Long(id));
         cliente.getEnderecos().remove(end);
         
-        clienteRepo.save(cliente);
+        clienteService.save(cliente);
                
         return "ConsultaClientes?faces-redirect=true";
     }
@@ -66,31 +59,28 @@ public class EnderecoBean implements Serializable {
         
         endereco = new Endereco();
         
-        String id = recuperaParametro("idCli");
-        
-        Optional<Cliente> clienteOpt = clienteRepo.findById(new Long(id));
-        cliente = clienteOpt.get();
+        String id = ControllerUtil.recuperaParametro("idCli");
+        cliente = clienteService.findById(new Long(id));
         
         return "CadastroEndereco?faces-redirect=true";
     }
+
+    public EnderecoService getEnderecoService() {
+        return enderecoService;
+    }
+
+    public void setEnderecoService(EnderecoService enderecoService) {
+        this.enderecoService = enderecoService;
+    }
+
+    public ClienteService getClienteService() {
+        return clienteService;
+    }
+
+    public void setClienteService(ClienteService clienteService) {
+        this.clienteService = clienteService;
+    }
     
-    private String recuperaParametro(String param) {
-        
-        FacesContext context = FacesContext.getCurrentInstance();
-        Map requestMap = context.getExternalContext().getRequestParameterMap();
-        String parametro = (String)requestMap.get(param);
-        
-        return parametro;
-    }
-
-    public EnderecoRepo getEnderecoRepo() {
-        return enderecoRepo;
-    }
-
-    public void setEnderecoRepo(EnderecoRepo enderecoRepo) {
-        this.enderecoRepo = enderecoRepo;
-    }
-
     public List<Endereco> getEnderecos() {
         return enderecos;
     }

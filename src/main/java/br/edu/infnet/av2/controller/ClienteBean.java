@@ -1,14 +1,12 @@
 package br.edu.infnet.av2.controller;
 
+import br.edu.infnet.av2.controller.util.ControllerUtil;
 import br.edu.infnet.av2.model.Cliente;
 import java.io.Serializable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import br.edu.infnet.av2.repository.ClienteRepo;
+import br.edu.infnet.av2.service.ClienteService;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import javax.faces.context.FacesContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Component
@@ -18,75 +16,61 @@ public class ClienteBean implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @Autowired
-    private ClienteRepo clienteRepo;
+    private ClienteService clienteService;
     private List<Cliente> clientes;
     private Cliente cliente = new Cliente();
 
     public String listar() {
         
         cliente = new Cliente();
-        clientes = clienteRepo.findAll();        
+        clientes = clienteService.findAll();        
         
         return "/cliente/ConsultaClientes?faces-redirect=true";
     }
     
     public String detalhar() {
         
-        String id = recuperaParametro("idCli");
-        
-        Optional<Cliente> clienteOpt = clienteRepo.findById(new Long(id));
-        cliente = clienteOpt.get();        
+        String id = ControllerUtil.recuperaParametro("idCli");
+        cliente = clienteService.findById(new Long(id));       
                 
         return "/cliente/DetalhesCliente?faces-redirect=true";
     }
     
     public String cadastrar() {
         
-        clienteRepo.save(cliente);
+        clienteService.save(cliente);
         
         return listar();
     }
     
     public String alterar() {
         
-        String id = recuperaParametro("idCli");
+        String id = ControllerUtil.recuperaParametro("idCli");
         
-        Optional<Cliente> clienteOpt = clienteRepo.findById(new Long(id));
-        Cliente clienteCadastrado = clienteOpt.get();
+        Cliente clienteCadastrado = clienteService.findById(new Long(id));
         
         clienteCadastrado.setNome(cliente.getNome());
-        clienteRepo.save(clienteCadastrado);
+        clienteService.save(clienteCadastrado);
         
         return listar();
     }
     
     public String remover() {
         
-        String id = recuperaParametro("idCli");
+        String id = ControllerUtil.recuperaParametro("idCli");
         
-        Optional<Cliente> clienteOpt = clienteRepo.findById(new Long(id));
-        Cliente ingr = clienteOpt.get();
-        
-        clienteRepo.delete(ingr);
+        Cliente cli = clienteService.findById(new Long(id));
+        clienteService.delete(cli);
         
         return listar();
     }
     
-    private String recuperaParametro(String param) {
-        
-        FacesContext context = FacesContext.getCurrentInstance();
-        Map requestMap = context.getExternalContext().getRequestParameterMap();
-        String parametro = (String)requestMap.get(param);
-        
-        return parametro;
-    }
-    
-    public ClienteRepo getClienteRepo() {
-        return clienteRepo;
+    public ClienteService getClienteService() {
+        return clienteService;
     }
 
-    public void setClienteRepo(ClienteRepo clienteRepo) {
-        this.clienteRepo = clienteRepo;
+    public void setClienteService(ClienteService clienteService) {
+        this.clienteService = clienteService;
     }
 
     public List<Cliente> getClientes() {

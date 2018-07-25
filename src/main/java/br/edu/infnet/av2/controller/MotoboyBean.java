@@ -1,14 +1,13 @@
 package br.edu.infnet.av2.controller;
 
+import br.edu.infnet.av2.controller.util.ControllerUtil;
 import br.edu.infnet.av2.model.Motoboy;
+import br.edu.infnet.av2.model.Papeis;
 import br.edu.infnet.av2.model.Papel;
-import br.edu.infnet.av2.repository.MotoboyRepo;
-import br.edu.infnet.av2.repository.PapelRepo;
+import br.edu.infnet.av2.service.MotoboyService;
+import br.edu.infnet.av2.service.PapelService;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import javax.faces.context.FacesContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -21,26 +20,24 @@ public class MotoboyBean implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @Autowired
-    private MotoboyRepo motoboyRepo;
+    private MotoboyService motoboyService;
     @Autowired
-    private PapelRepo papelRepo;
+    private PapelService papelService;
     private List<Motoboy> motoboys;
     private Motoboy motoboy = new Motoboy();
     
     public String listar() {
         
         motoboy = new Motoboy();
-        motoboys = motoboyRepo.findAll();        
+        motoboys = motoboyService.findAll();        
         
         return "/motoboy/ConsultaMotoboys?faces-redirect=true";
     }
     
     public String detalhar() {
         
-        String id = recuperaParametro("idMoto");
-        
-        Optional<Motoboy> motoboyOpt = motoboyRepo.findById(new Long(id));
-        motoboy = motoboyOpt.get();
+        String id = ControllerUtil.recuperaParametro("idMoto");
+        motoboy = motoboyService.findById(new Long(id));
         
         return "/motoboy/DetalhesMotoboy?faces-redirect=true";
     }
@@ -48,48 +45,37 @@ public class MotoboyBean implements Serializable {
     @Transactional(readOnly = false)
     public String cadastrar() {
         
-        Papel papelMotoboy = papelRepo.findByNomePapel("ROLE_USUARIO");
+        Papel papelMotoboy = papelService.findByNomePapel(Papeis.ROLE_USUARIO.toString());
         motoboy.getPapeis().add(papelMotoboy);
-        motoboyRepo.save(motoboy);
+        motoboyService.save(motoboy);
         
         return listar();
     }
     
     public String remover() {
         
-        String id = recuperaParametro("idMoto");
+        String id = ControllerUtil.recuperaParametro("idMoto");
+        Motoboy ingr = motoboyService.findById(new Long(id));
         
-        Optional<Motoboy> motoboyOpt = motoboyRepo.findById(new Long(id));
-        Motoboy ingr = motoboyOpt.get();
-        
-        motoboyRepo.delete(ingr);
+        motoboyService.delete(ingr);
         
         return listar();
     }
-    
-    private String recuperaParametro(String param) {
-        
-        FacesContext context = FacesContext.getCurrentInstance();
-        Map requestMap = context.getExternalContext().getRequestParameterMap();
-        String parametro = (String)requestMap.get(param);
-        
-        return parametro;
+
+    public MotoboyService getMotoboyService() {
+        return motoboyService;
     }
 
-    public MotoboyRepo getMotoboyRepo() {
-        return motoboyRepo;
+    public void setMotoboyService(MotoboyService motoboyService) {
+        this.motoboyService = motoboyService;
     }
 
-    public void setMotoboyRepo(MotoboyRepo motoboyRepo) {
-        this.motoboyRepo = motoboyRepo;
+    public PapelService getPapelService() {
+        return papelService;
     }
 
-    public PapelRepo getPapelRepo() {
-        return papelRepo;
-    }
-
-    public void setPapelRepo(PapelRepo papelRepo) {
-        this.papelRepo = papelRepo;
+    public void setPapelService(PapelService papelService) {
+        this.papelService = papelService;
     }
 
     public List<Motoboy> getMotoboys() {
