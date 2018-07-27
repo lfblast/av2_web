@@ -73,6 +73,10 @@ public class Pedido implements Serializable {
     @Column(name="status")
     @Enumerated(EnumType.STRING)
     private StatusPedido status;
+    
+    @Column(name="forma_pagamento")
+    @Enumerated(EnumType.STRING)
+    private FormaPagamento formaPagamento;
 
     public Pedido() {
     }
@@ -203,5 +207,13 @@ public class Pedido implements Serializable {
 
     public void setStatus(StatusPedido status) {
         this.status = status;
+    }
+
+    public FormaPagamento getFormaPagamento() {
+        return formaPagamento;
+    }
+
+    public void setFormaPagamento(FormaPagamento formaPagamento) {
+        this.formaPagamento = formaPagamento;
     }
 }

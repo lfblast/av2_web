@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Detalhes do Pedido</ui:define>
+    <ui:define name="corpo">
+        <h1>Detalhes do Pedido</h1>
+        <div>
+            <h:form>
+                <p:commandLink action = "#{pedidoBean.listar}" value = "Voltar"/>
+            </h:form>
+        </div>
+        <div>
+            <h:form>
+                <table>
+                    <tr>
+                        <td>Cliente</td>
+                        <td>#{pedidoBean.pedido.cliente.nome}</td>
+                    </tr>
+                    <tr>
+                        <td>Endereço:</td>
+                        <td>
+                            <h:selectOneMenu                                
+                                value="#{pedidoBean.pedido.endereco.id}"
+                                label="Endereco">
+                                <f:selectItems
+                                    value="#{pedidoBean.pedido.cliente.enderecos}"
+                                    var="endereco"
+                                    itemValue="#{endereco.id}"
+                                    itemLabel="#{endereco.rua} - #{endereco.numero} - #{endereco.referencia}"/>
+                            </h:selectOneMenu>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Atendente:</td>
+                        <td>
+                            <h:selectOneMenu                                
+                                value="#{pedidoBean.pedido.atendente.id}"
+                                label="Atendente">
+                                <f:selectItems
+                                    value="#{pedidoBean.atendentes}"
+                                    var="atendente"
+                                    itemValue="#{atendente.id}"
+                                    itemLabel="#{atendente.nome}"/>
+                            </h:selectOneMenu>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Entregador:</td>
+                        <td>
+                            <h:selectOneMenu                                
+                                value="#{pedidoBean.pedido.entregador.id}"
+                                label="entregador">
+                                <f:selectItems
+                                    value="#{pedidoBean.entregadores}"
+                                    var="entregador"
+                                    itemValue="#{entregador.id}"
+                                    itemLabel="#{atendente.nome}"/>
+                            </h:selectOneMenu>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Entrega:</td>
+                        <td>
+                            <h:outputLabel value="Entrega" />
+                            <h:selectOneMenu value = "#{pedidoBean.pedido.entrega}"> 
+                                <f:selectItem itemValue = "1" itemLabel = "Sim" /> 
+                                <f:selectItem itemValue = "0" itemLabel = "Não" /> 
+                            </h:selectOneMenu>                         
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Desconto:</td>
+                        <td>
+                            <h:outputLabel value="Desconto" />
+                            <h:inputText size="12"
+                                         value="#{pedidoBean.pedido.desconto}"
+                                         label="Desconto">
+                                <f:convertNumber locale="pt_BR" maxFractionDigits="2"
+                                                 minFractionDigits="2" />
+                            </h:inputText>>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Taxa de Entrega:</td>
+                        <td>
+                            <h:inputText size="12"
+                                         value="#{pedidoBean.pedido.taxaEntrega}"
+                                         label="Valor de Entrega">
+                                <f:convertNumber locale="pt_BR" maxFractionDigits="2"
+                                                 minFractionDigits="2" />
+                            </h:inputText> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Troco:</td>
+                        <td>
+                            <h:inputText size="12"
+                                         value="#{pedidoBean.pedido.troco}"
+                                         label="Troco">
+                                <f:convertNumber locale="pt_BR" maxFractionDigits="2"
+                                                 minFractionDigits="2" />
+                            </h:inputText> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Forma de Pagamento:</td>
+                        <td>
+                            <h:selectOneMenu
+                                value="#{pedidoBean.pedido.formaPagamento}"  
+                                label="Forma Pagamento">
+                                <f:selectItem
+                                    itemLabel="Selecione" noSelectionOption="true" />
+                                <f:selectItems
+                                    value="#{pedidoBean.formaPagamento}"
+                                    var="pagamento" itemValue="#{pagamento.val}"
+                                    />
+                            </h:selectOneMenu>
+                        </td>
+                    </tr>                    
+                </table>
+                <h:commandButton action = "#{pedidoBean.cadastrar}" value = "Cadastrar"/>
+            </h:form>
+        </div>        
+    </ui:define>
+</ui:composition>
