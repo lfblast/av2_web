@@ -21,7 +21,7 @@ public class Endereco implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="endereco_id", nullable=false, unique=true, length=11)
-    private long id;
+    private Long id;
     
     @Column(name="rua", nullable=false)
     private String rua;
@@ -45,12 +45,12 @@ public class Endereco implements Serializable {
         this.referencia = referencia;
         this.cliente = cliente;
     }
-    
-    public long getId() {
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

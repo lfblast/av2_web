@@ -1,4 +1,4 @@
-package br.edu.infnet.av2.controller;
+package br.edu.infnet.av2.controller.converter;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;

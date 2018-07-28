@@ -20,16 +20,17 @@
             <h:form>
                 <h:outputText value="Não existem clientes cadastrados." rendered="#{empty pedidoBean.clientes}"/>
                 <h:selectOneMenu                                
-                    value="#{pedidoBean.pedido.cliente.id}"
+                    value="#{pedidoBean.pedido.cliente}"
+                    converter="#{clienteConverter}"
                     label="Cliente">
                     <f:selectItems
                         value="#{pedidoBean.clientes}"
                         var="cliente"
-                        itemValue="#{cliente.id}"
+                        itemValue="#{cliente}"
                         itemLabel="#{cliente.nome}"/>
                 </h:selectOneMenu>
                 <br/><br/>
-                <h:commandButton action = "#{pedidoBean.preparaCadastro}" value = "Enviar"/>
+                <h:commandButton action = "#{pedidoBean.preparaCadastro()}" value = "Enviar"/>
             </h:form>
         </div>
     </ui:define>

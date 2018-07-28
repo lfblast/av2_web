@@ -1,4 +1,4 @@
-IMPORTANTE --> Foram feitos todos os CRUD's, menos o de PEDIDO devido à falta de tempo após os problemas do moodle. Enviamos um email para tentar postergar a data de entrega e, caso seja possível, pretendo finalizar melhor o trabalho.
+IMPORTANTE --> Foi feito todo o esquema de segurança, login, autorização das páginas e os CRUD's, menos o de PEDIDO devido à falta de tempo após os problemas do moodle. Enviamos um email para tentar postergar a data de entrega e, caso seja possível, pretendo finalizar melhor o trabalho.
 
 
 Foram criados dois usuários:

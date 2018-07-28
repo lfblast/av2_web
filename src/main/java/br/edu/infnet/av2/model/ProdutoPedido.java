@@ -21,7 +21,7 @@ public class ProdutoPedido implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="produto_pedido_id", nullable=false, unique=true, length=11)
-    private long id;
+    private Long id;
     
     @ManyToOne
     @JoinColumn(name="produto_id", nullable=false)
@@ -46,12 +46,12 @@ public class ProdutoPedido implements Serializable {
         this.quantidade = quantidade;
         this.obs = obs;
     }
-    
-    public long getId() {
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

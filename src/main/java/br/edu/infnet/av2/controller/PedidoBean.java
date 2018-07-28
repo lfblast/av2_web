@@ -3,16 +3,19 @@ package br.edu.infnet.av2.controller;
 import br.edu.infnet.av2.controller.util.ControllerUtil;
 import br.edu.infnet.av2.model.Atendente;
 import br.edu.infnet.av2.model.Cliente;
+import br.edu.infnet.av2.model.Endereco;
 import br.edu.infnet.av2.model.FormaPagamento;
 import br.edu.infnet.av2.model.Motoboy;
 import br.edu.infnet.av2.model.Pedido;
 import br.edu.infnet.av2.model.Produto;
+import br.edu.infnet.av2.model.ProdutoPedido;
 import br.edu.infnet.av2.service.AtendenteService;
 import br.edu.infnet.av2.service.ClienteService;
 import br.edu.infnet.av2.service.MotoboyService;
 import br.edu.infnet.av2.service.PedidoService;
 import br.edu.infnet.av2.service.ProdutoService;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -40,6 +43,10 @@ public class PedidoBean implements Serializable {
     private List<Produto> produtos;
     private List<Atendente> atendentes;
     private List<Motoboy> entregadores;
+    private List<Endereco> clienteEnderecos;
+    private List<ProdutoPedido> produtosPedidos = new ArrayList<>();
+    private Produto produto = new Produto();
+    private ProdutoPedido pp = new ProdutoPedido();
     
     public String listar() {
 
@@ -59,6 +66,7 @@ public class PedidoBean implements Serializable {
 
     public String cadastrar() {
 
+        pedido.setProdutos(produtosPedidos);
         pedidoService.save(pedido);
 
         return listar();
@@ -100,11 +108,17 @@ public class PedidoBean implements Serializable {
 
     private void recuperaDadosCadastro() {
 
-        Cliente cli = clienteService.findById(pedido.getCliente().getId());
-        pedido.setCliente(cli);
         produtos = produtoService.findAll();
         atendentes = atendenteService.findAll();
         entregadores = entregadorService.findAll();
+    }
+    
+    public void addProdutoPedido() {
+        pp.setProduto(this.produto);        
+        pp.setQuantidade(1);
+        produtosPedidos.add(this.pp);
+        produto = new Produto();     
+        pp = new ProdutoPedido();
     }
 
     public PedidoService getPedidoService() {
@@ -197,5 +211,37 @@ public class PedidoBean implements Serializable {
     
     public FormaPagamento[] getFormaPagamento() {
         return FormaPagamento.values();
+    }
+
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
+    public ProdutoPedido getPp() {
+        return pp;
+    }
+
+    public void setPp(ProdutoPedido pp) {
+        this.pp = pp;
+    }
+
+    public List<Endereco> getClienteEnderecos() {
+        return clienteEnderecos;
+    }
+
+    public void setClienteEnderecos(List<Endereco> clienteEnderecos) {
+        this.clienteEnderecos = clienteEnderecos;
+    }
+
+    public List<ProdutoPedido> getProdutosPedidos() {
+        return produtosPedidos;
+    }
+
+    public void setProdutosPedidos(List<ProdutoPedido> produtosPedidos) {
+        this.produtosPedidos = produtosPedidos;
     }
 }

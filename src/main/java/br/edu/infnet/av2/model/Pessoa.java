@@ -22,7 +22,7 @@ public class Pessoa implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="pessoa_id", nullable=false, unique=true, length=11)
-    private long id;
+    private Long id;
     
     @Column(name="nome", nullable=false)
     private String nome;
@@ -34,11 +34,11 @@ public class Pessoa implements Serializable {
         this.nome = nome;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

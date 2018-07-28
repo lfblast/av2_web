@@ -17,6 +17,24 @@
         </div>
         <div>
             <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="Produto" />
+                    <h:selectOneMenu
+                        value="#{pedidoBean.produto}"  converter="#{produtoConverter}"
+                        label="Produto">
+                        <f:selectItem
+                            itemLabel="Selecione" noSelectionOption="true" />
+                        <f:selectItems
+                            value="#{pedidoBean.produtos}"
+                            var="produto" itemValue="#{produto}"
+                            itemLabel="#{produto.nome}" />
+                    </h:selectOneMenu>
+
+                    <h:commandButton value="Adicionar"
+                                     action="#{pedidoBean.addProdutoPedido}" />
+                </h:panelGrid>
+            </h:form>
+            <h:form>
                 <table>
                     <tr>
                         <td>Cliente</td>
